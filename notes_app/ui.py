@@ -57,14 +57,16 @@ class NotePanel(wx.Panel):
         self.main_frame.on_note_delete()
 
     def on_save(self, event):
+        self.update_note()
+        self.notes_service.update(self._note)
+        self.main_frame.update_notes()
+        # evt = NoteUpdatedEvent(note=self._note)
+        # wx.PostEvent(self.GetParent(), evt)
+
+    def update_note(self):
         self._note.title = self.title_widget.GetValue()
         self._note.content = self.text_widget.GetValue()
 
-        self.notes_service.update(self._note)
-        self.main_frame.update_notes()
-
-        # evt = NoteUpdatedEvent(note=self._note)
-        # wx.PostEvent(self.GetParent(), evt)
 
 
 class ApplicationFrame(wx.Frame):
@@ -91,6 +93,7 @@ class ApplicationFrame(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.on_info_btn_click, info_btn)
 
         create_btn = wx.Button(panel, label="Create")
+        self.Bind(wx.EVT_BUTTON, self.on_create_btn_click, create_btn)
 
         self.note_panel = NotePanel(self.notes_service, self, panel)
         self.Bind(EVT_NOTE_UPDATED, self.on_note_updated, self.note_panel)
@@ -142,3 +145,8 @@ class ApplicationFrame(wx.Frame):
 
     def on_info_btn_click(self, event):
         wx.InfoMessageBox(self)
+
+    def on_create_btn_click(self, event):
+#        self.note_panel.update_note()
+        self.notes_service.create(self.note_panel.title_widget.GetValue(), self.note_panel.text_widget.GetValue())
+        self.update_notes()

@@ -71,4 +71,7 @@ class NotesService:
         self.save_notes()
 
     def create(self, title, content):
-        pass
+        n_id = max([note.id for note in self.notes]) + 1
+
+        self.notes.append(Note(id=n_id, title=title, content=content))
+        self.save_notes()
