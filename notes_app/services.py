@@ -1,5 +1,6 @@
 import json
 import typing
+from operator import attrgetter
 
 from .models import Note
 
@@ -24,7 +25,8 @@ class NotesService:
 
     def save_notes(self):
         """Stores notes in JSON database file"""
-        notes = [dict(id=note.id, title=note.title, content=note.content) for note in self.notes]
+        notes = [dict(id=note.id, title=note.title, content=note.content) for note in
+                 self.notes]
 
         with open(self.database, "w") as f:
             json.dump(notes, f, indent=2)
@@ -71,7 +73,8 @@ class NotesService:
         self.save_notes()
 
     def create(self, title, content):
-        n_id = max([note.id for note in self.notes]) + 1
+        # n_id = max([note.id for note in self.notes]) + 1
+        n_id = max(self.notes, key=attrgetter("id")).id + 1
 
         self.notes.append(Note(id=n_id, title=title, content=content))
         self.save_notes()

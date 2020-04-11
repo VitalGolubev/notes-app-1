@@ -147,6 +147,5 @@ class ApplicationFrame(wx.Frame):
         wx.InfoMessageBox(self)
 
     def on_create_btn_click(self, event):
-#        self.note_panel.update_note()
         self.notes_service.create(self.note_panel.title_widget.GetValue(), self.note_panel.text_widget.GetValue())
         self.update_notes()
